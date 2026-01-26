@@ -1,5 +1,4 @@
 import { Request, Response } from "express"
-import { prisma } from "../../src/lib/prisma"
 import { mealServices } from "./meal.services"
 
 const getMeal = async (req: Request, res: Response) => {
@@ -7,6 +6,7 @@ const getMeal = async (req: Request, res: Response) => {
         const data = await mealServices.getAllMeal()
         res.status(200).json({
             success: true,
+            ok: true,
             data,
         })
 
@@ -18,7 +18,26 @@ const getMeal = async (req: Request, res: Response) => {
         }
     }
 }
+const getMealDetails = async (req: Request, res: Response) => {
+    const { id } = req.params
 
+    try {
+        const data = await mealServices.getMealDetails(id as string)
+        res.status(200).json({
+            success: true,
+            ok: true,
+            data,
+        })
+
+    } catch (error) {
+        return {
+            success: false,
+            data: null,
+            error: error
+        }
+    }
+}
 export const mealController = {
-    getMeal
+    getMeal,
+    getMealDetails
 }
