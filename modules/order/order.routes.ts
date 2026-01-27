@@ -6,5 +6,6 @@ import { orderController } from './order.controller';
 const router = express.Router()
 
 router.get("/", auth(UserRole.PROVIDER), orderController.getAllOrder)
+router.patch("/update-order/:id", auth(UserRole.PROVIDER), orderController.updateOrder)
 
 export const orderRouter = router

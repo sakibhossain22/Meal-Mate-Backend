@@ -24,7 +24,31 @@ const getAllOrder = async (req: Request, res: Response) => {
             );
     }
 }
+const updateOrder = async (req: Request, res: Response) => {
+    const { id } = req.params
+
+    try {
+        const data = await orderServices.updateOrder(req.body, req.user as UserType, id as string)
+        res.status(200).json({
+            success: true,
+            ok: true,
+            data,
+        })
+
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to Get Order"
+        res.status(500)
+            .json(
+                {
+                    success: false,
+                    data: null,
+                    error: errorMessage
+                }
+            );
+    }
+}
 
 export const orderController = {
-    getAllOrder
+    getAllOrder,
+    updateOrder
 }
