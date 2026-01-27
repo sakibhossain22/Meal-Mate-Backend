@@ -1,4 +1,5 @@
 import { MealWhereInput, ProviderProfileWhereInput } from "../../generated/prisma/models"
+import { AppError } from "../../src/error/AppError"
 import { prisma } from "../../src/lib/prisma"
 import { MealType } from "../../src/types/types"
 
@@ -57,9 +58,35 @@ const updateMeal = async (bodyData: MealType, user: { id: string }, mealId: stri
     })
     return updateMealData
 }
+const deleteMeal = async (user: { id: string }, mealId: string) => {
+    const { id: userId } = user
+    console.log("id", userId);
+    console.log("Mealid", mealId)
+
+    const provider = await prisma.providerProfile.findUniqueOrThrow({
+        where: {
+            userId: userId
+        },
+        select: {
+            id: true,
+            userId: true
+        }
+    })
+    if (provider.userId !== userId) {
+        throw new AppError("Your are not the author of this Meal", 403)
+    }
+
+    const updateMealData = await prisma.meal.delete({
+        where: {
+            id: mealId
+        }
+    })
+    return updateMealData
+}
 export const mealServices = {
     getAllMeal,
     getMealDetails,
     addMeal,
-    updateMeal
+    updateMeal,
+    deleteMeal
 }

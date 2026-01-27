@@ -89,9 +89,32 @@ const updateMeal = async (req: Request, res: Response) => {
             );
     }
 }
+const deleteMeal = async (req: Request, res: Response) => {
+
+    try {
+        const data = await mealServices.deleteMeal(req.user as any, req.params.id as any)
+        res.status(200).json({
+            success: true,
+            ok: true,
+            data,
+        })
+
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to Delete Meal"
+        res.status(500)
+            .json(
+                {
+                    success: false,
+                    data: null,
+                    error: errorMessage
+                }
+            );
+    }
+}
 export const mealController = {
     getMeal,
     getMealDetails,
     addMeal,
-    updateMeal
+    updateMeal,
+    deleteMeal
 }

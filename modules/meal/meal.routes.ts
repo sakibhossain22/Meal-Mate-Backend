@@ -7,7 +7,8 @@ const router = express.Router()
 router.get('/', mealController.getMeal)
 router.get('/:id', mealController.getMealDetails)
 router.post('/add-meal',auth(UserRole.PROVIDER), mealController.addMeal)
-router.post('/update-meal/:id',auth(UserRole.PROVIDER), mealController.updateMeal)
+router.patch('/update-meal/:id',auth(UserRole.PROVIDER), mealController.updateMeal)
+router.delete('/delete-meal/:id',auth(UserRole.PROVIDER), mealController.deleteMeal)
 
 
 export const mealRouter = router
