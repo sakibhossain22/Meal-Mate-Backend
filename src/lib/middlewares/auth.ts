@@ -10,37 +10,41 @@ declare global {
                 name?: string;
                 role?: string;
                 emailVerified: boolean;
+                status?: string;
             };
         }
     }
 }
 export enum UserRole {
     ADMIN = "ADMIN",
-    USER = "USER"
+    CUSTOMER = "CUSTOMER",
+    PROVIDER = "PROVIDER"
 }
-const auth = (...role : UserRole[]) => {
+const auth = (...role: UserRole[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         const session = await betterAuth.api.getSession({
             headers: req.headers as any
         })
+
         if (!session || !session.user) {
             return res.status(401).json({ error: "Unauthorized" });
         }
-        if (!session.user.emailVerified) {
-            return res.status(403).json({ error: "Email not verified" });
-        }
+
+        // if (!session.user.emailVerified) {
+        //     return res.status(403).json({ error: "Email not verified" });
+        // }
 
         req.user = {
             id: session.user.id,
             email: session.user.email,
             name: session.user.name,
             role: session.user.role,
-            emailVerified: session.user.emailVerified
+            emailVerified: session.user.emailVerified,
+            status: session.user.status
         }
-
         if (role.length > 0 && (!req.user.role || !role.includes(req.user.role as UserRole))) {
             return res.status(403).json({ error: "Forbidden" });
-        }   
+        }
         next()
     }
 }

@@ -76,8 +76,8 @@ model Meal {
   isAvailable       Boolean         @default(true)
   categoryId        String
   category          Category        @relation(fields: [categoryId], references: [id])
-  providerProfileId String
-  provider          ProviderProfile @relation(fields: [providerProfileId], references: [id])
+  providerProfileId String?
+  provider          ProviderProfile? @relation(fields: [providerProfileId], references: [id])
   orderItems        OrderItem[]
   reviews           Review[]
   createdAt         DateTime        @default(now())

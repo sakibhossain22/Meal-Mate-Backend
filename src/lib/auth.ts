@@ -12,6 +12,12 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
+    user: {
+        additionalFields: {
+            role: { type: "string", isRequired: true },
+            status: { type: "string", required: true }
+        }
+    },
     socialProviders: {
         google: {
             prompt: "select_account consent",
