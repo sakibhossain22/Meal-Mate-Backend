@@ -17,6 +17,16 @@ const getAllOrders = async () => {
   const data = await prisma.order.findMany();
   return data;
 };
+const Allcategories = async () => {
+  const data = await prisma.category.findMany({
+    include: {
+      meals: true,
+    },
+  });
+
+  return data;
+};
+
 
 const updateUserStatus = async (bodyData : any, id: string) => {
     const data = await prisma.user.update({
@@ -31,6 +41,7 @@ const updateUserStatus = async (bodyData : any, id: string) => {
 export const adminService = {
     getAllUsers,
     updateUserStatus,
-    getAllOrders
+    getAllOrders,
+    Allcategories
 
 }
