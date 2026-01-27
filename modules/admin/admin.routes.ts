@@ -5,6 +5,7 @@ import auth, { UserRole } from '../../src/lib/middlewares/auth';
 
 const router = express.Router()
 router.get('/all-users',adminController.getAllUsers )
+router.get('/all-orders',adminController.getAllOrders )
 router.patch('/update-user/:id',adminController.updateUserStatus )
 
 export const adminRoutes = router

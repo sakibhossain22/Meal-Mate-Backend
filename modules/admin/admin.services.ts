@@ -2,9 +2,22 @@ import { prisma } from "../../src/lib/prisma"
 
 
 const getAllUsers = async () => {
-    const data = await prisma.user.findMany()
-    return data
-}
+  const data = await prisma.user.findMany({
+    where: {
+      OR: [
+        { role: "CUSTOMER" },
+        { role: "PROVIDER" },
+      ],
+    },
+  });
+
+  return data;
+};
+const getAllOrders = async () => {
+  const data = await prisma.order.findMany();
+  return data;
+};
+
 const updateUserStatus = async (bodyData : any, id: string) => {
     const data = await prisma.user.update({
         where: {
@@ -17,6 +30,7 @@ const updateUserStatus = async (bodyData : any, id: string) => {
 
 export const adminService = {
     getAllUsers,
-    updateUserStatus
+    updateUserStatus,
+    getAllOrders
 
 }

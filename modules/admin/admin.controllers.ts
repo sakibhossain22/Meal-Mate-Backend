@@ -23,6 +23,27 @@ const getAllUsers = async (req: Request, res: Response) => {
             );
     }
 }
+const getAllOrders = async (req: Request, res: Response) => {
+    try {
+        const data = await adminService.getAllOrders()
+        res.status(200).json({
+            success: true,
+            ok: true,
+            data,
+        })
+
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to Get Meal"
+        res.status(500)
+            .json(
+                {
+                    success: false,
+                    data: null,
+                    error: errorMessage
+                }
+            );
+    }
+}
 const updateUserStatus = async (req: Request, res: Response) => {
     const { id } = req.params
     try {
@@ -48,5 +69,6 @@ const updateUserStatus = async (req: Request, res: Response) => {
 
 export const adminController = {
     getAllUsers,
-    updateUserStatus
+    updateUserStatus,
+    getAllOrders
 }
