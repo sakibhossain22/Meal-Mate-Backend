@@ -4,9 +4,9 @@ import auth, { UserRole } from '../../src/lib/middlewares/auth';
 
 
 const router = express.Router()
-router.get('/all-categories',adminController.Allcategories )
-router.get('/all-users',adminController.getAllUsers )
-router.get('/all-orders',adminController.getAllOrders )
-router.patch('/update-user/:id',adminController.updateUserStatus )
+router.get('/all-categories', auth(UserRole.ADMIN), adminController.Allcategories)
+router.get('/all-users', auth(UserRole.ADMIN), adminController.getAllUsers)
+router.get('/all-orders', auth(UserRole.ADMIN), adminController.getAllOrders)
+router.patch('/update-user/:id', auth(UserRole.ADMIN), adminController.updateUserStatus)
 
-export const adminRoutes = router
+export const adminRouter = router

@@ -6,7 +6,9 @@ import globalErrorHandler from '../src/lib/middlewares/globalErrorHandler';
 import { notFound } from '../src/lib/middlewares/notFound';
 import { mealRouter } from './meal/meal.routes';
 import { orderRouter } from './order/order.routes';
-import { adminRoutes } from './admin/admin.routes';
+import { adminRouter } from './admin/admin.routes';
+import { customerRouter } from './customer/customer.routes';
+import { providerRouter } from './providers/provider.routes';
 
 
 const app = express();
@@ -19,7 +21,9 @@ app.use(cors({
 app.all("/api/auth/*slat", toNodeHandler(auth));
 app.use('/meal', mealRouter)
 app.use("/orders", orderRouter)
-app.use('/admin', adminRoutes)
+app.use('/admin', adminRouter)
+app.use('/customer', customerRouter)
+app.use("/provider", providerRouter)
 
 
 app.use(notFound)
