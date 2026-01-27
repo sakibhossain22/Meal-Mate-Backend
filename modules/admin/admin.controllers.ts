@@ -26,7 +26,7 @@ const getAllUsers = async (req: Request, res: Response) => {
 const updateUserStatus = async (req: Request, res: Response) => {
     const { id } = req.params
     try {
-        const data = await adminService.updateUserStatus(id as string)
+        const data = await adminService.updateUserStatus(req.body,id as string)
         res.status(200).json({
             success: true,
             ok: true,

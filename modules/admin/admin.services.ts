@@ -5,12 +5,12 @@ const getAllUsers = async () => {
     const data = await prisma.user.findMany()
     return data
 }
-const updateUserStatus = async (id : string) => {
+const updateUserStatus = async (bodyData : any, id: string) => {
     const data = await prisma.user.update({
-        where : {
-            id : id
+        where: {
+            id: id
         },
-        data : 
+        data: bodyData
     })
     return data
 }

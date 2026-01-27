@@ -19,6 +19,12 @@ enum Role {
   ADMIN
 }
 
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BANNED
+}
+
 enum OrderStatus {
   PENDING
   CONFIRMED
@@ -39,7 +45,7 @@ model User {
   reviews       Review[]
   emailVerified Boolean          @default(false)
   phone         String?
-  status        String?          @default("ACTIVE")
+  status        UserStatus?      @default(ACTIVE)
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
   sessions      Session[]
@@ -96,16 +102,16 @@ model Order {
 }
 
 model OrderItem {
-  id       String @id @default(uuid())
-  orderId  String
-  order    Order  @relation(fields: [orderId], references: [id])
-  mealId   String
-  meal     Meal   @relation(fields: [mealId], references: [id])
+  id      String @id @default(uuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id])
+  mealId  String
+  meal    Meal   @relation(fields: [mealId], references: [id])
   // add meal providerId for easier access
-  
+
   providerId String
-  quantity Int
-  price    Float
+  quantity   Int
+  price      Float
 }
 
 model Review {
