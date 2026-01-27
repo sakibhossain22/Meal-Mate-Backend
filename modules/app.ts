@@ -5,6 +5,7 @@ import cors from 'cors';
 import globalErrorHandler from '../src/lib/middlewares/globalErrorHandler';
 import { notFound } from '../src/lib/middlewares/notFound';
 import { mealRouter } from './meal/meal.routes';
+import { orderRouter } from './order/order.routes';
 
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(cors({
 
 app.all("/api/auth/*slat", toNodeHandler(auth));
 app.use('/meal', mealRouter)
+app.use("/orders", orderRouter)
 
 
 app.use(notFound)

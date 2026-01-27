@@ -11,3 +11,11 @@ export interface MealType {
     createdAt: Date;
     updatedAt: Date;
 }
+export interface UserType {
+    id: string;
+    email: string;
+    name?: string;
+    role?: string;
+    emailVerified: boolean;
+    status?: string;
+}
