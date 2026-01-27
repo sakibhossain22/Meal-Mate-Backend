@@ -1,4 +1,5 @@
 import { prisma } from "../../src/lib/prisma"
+import { MealType } from "../../src/types/types"
 
 const getAllMeal = async () => {
     const data = await prisma.meal.findMany()
@@ -12,7 +13,15 @@ const getMealDetails = async (id: string) => {
     })
     return data
 }
+const addMeal = async (bodyData: MealType) => {
+    console.log(bodyData);
+    const data = await prisma.meal.create({
+        data: bodyData
+    })
+    return data
+}
 export const mealServices = {
     getAllMeal,
-    getMealDetails
+    getMealDetails,
+    addMeal
 }

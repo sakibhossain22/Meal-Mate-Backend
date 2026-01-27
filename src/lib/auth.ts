@@ -8,7 +8,7 @@ export const auth = betterAuth({
         provider: "postgresql",
     }),
     trustedOrigins: [process.env.APP_URL || "http://localhost:3000"],
-  
+
     emailAndPassword: {
         enabled: true,
     },
@@ -19,5 +19,5 @@ export const auth = betterAuth({
             clientId: process.env.GOOGLE_CLIENT_ID as string,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         },
-    },
+    }
 });

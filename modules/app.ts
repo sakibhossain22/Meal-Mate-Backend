@@ -17,6 +17,7 @@ app.use(cors({
 app.all("/api/auth/*slat", toNodeHandler(auth));
 app.use('/meal', mealRouter)
 
+
 app.use(notFound)
 app.use(globalErrorHandler)
 export default app;
