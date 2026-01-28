@@ -28,7 +28,6 @@ const addToCart = async (bodyData: any, userId: string,) => {
     return cartItem;
 };
 
-
 const getCart = async (user: UserType) => {
     const data = await prisma.cart.findMany({
         where: {
@@ -46,10 +45,26 @@ const getCart = async (user: UserType) => {
 
     return data;
 };
+const deleteFromCart = async (itemId: string) => {
+    return await prisma.cartItem.delete({
+        where: {
+            id: itemId
+        }
+    });
+};
+const clearCart = async (cartId: string) => {
+    await prisma.cartItem.deleteMany({
+        where: {
+            cartId
+        }
+    });
+};
+
 
 
 export const cartService = {
     addToCart,
-    getCart
-
+    getCart,
+    deleteFromCart,
+    clearCart
 }

@@ -47,7 +47,53 @@ const getCart = async (req: Request, res: Response) => {
             );
     }
 }
+const deleteFromCart = async (req: Request, res: Response) => {
+    const { id } = req.params
+    try {
+        const data = await cartService.deleteFromCart(id as any)
+        res.status(200).json({
+            success: true,
+            ok: true,
+            data,
+        })
+
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to delete Cart"
+        res.status(500)
+            .json(
+                {
+                    success: false,
+                    data: null,
+                    error: errorMessage
+                }
+            );
+    }
+}
+const clearCart = async (req: Request, res: Response) => {
+    const { id } = req.body
+    try {
+        const data = await cartService.clearCart(id as any)
+        res.status(200).json({
+            success: true,
+            ok: true,
+            data,
+        })
+
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to Fetch Cart"
+        res.status(500)
+            .json(
+                {
+                    success: false,
+                    data: null,
+                    error: errorMessage
+                }
+            );
+    }
+}
 export const cartController = {
     getCart,
-    addToCart
+    addToCart,
+    deleteFromCart,
+    clearCart
 }
