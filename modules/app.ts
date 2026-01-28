@@ -9,6 +9,7 @@ import { orderRouter } from './order/order.routes';
 import { adminRouter } from './admin/admin.routes';
 import { customerRouter } from './customer/customer.routes';
 import { providerRouter } from './providers/provider.routes';
+import { userProfileRouter } from './userProfile/userProfile.routes';
 
 
 const app = express();
@@ -24,9 +25,7 @@ app.use("/orders", orderRouter)
 app.use('/admin', adminRouter)
 app.use('/customer', customerRouter)
 app.use("/provider", providerRouter)
-app.get('/api/auth/me', async (req: Request, res: Response) => {
-
-})
+app.use("/profile", userProfileRouter)
 
 app.use(notFound)
 app.use(globalErrorHandler)
