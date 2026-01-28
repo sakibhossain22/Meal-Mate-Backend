@@ -24,6 +24,28 @@ const getAllOrder = async (req: Request, res: Response) => {
             );
     }
 }
+const postOrder = async (req: Request, res: Response) => {
+
+    try {
+        const data = await orderServices.postOrder(req.user as UserType, req.body as any)
+        res.status(200).json({
+            success: true,
+            ok: true,
+            data,
+        })
+
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to Post Order"
+        res.status(500)
+            .json(
+                {
+                    success: false,
+                    data: null,
+                    error: errorMessage
+                }
+            );
+    }
+}
 const updateOrder = async (req: Request, res: Response) => {
     const { id } = req.params
 
@@ -50,5 +72,6 @@ const updateOrder = async (req: Request, res: Response) => {
 
 export const orderController = {
     getAllOrder,
-    updateOrder
+    updateOrder,
+    postOrder
 }

@@ -32,6 +32,37 @@ const getAllOrder = async (user: UserType) => {
 
     return data;
 };
+const postOrder = async (user: UserType, bodyData: any) => {
+  const order = await prisma.order.create({
+    data: {
+      customerId: user.id,
+      totalPrice: bodyData.totalPrice,
+    },
+  });
+  const orderItemsData = bodyData.items.map((item: any) => ({
+    orderId: order.id,
+    mealId: item.mealId,
+    quantity: item.quantity,
+    price: item.price,
+  }));
+  await prisma.orderItem.createMany({
+    data: orderItemsData,
+  });
+  return prisma.order.findUnique({
+    where: { id: order.id },
+    include: {
+      items: {
+        include: {
+          meal: true,
+        },
+      },
+    },
+  });
+};
+
+
+
+
 const updateOrder = async (
     bodyData: any,
     user: UserType,
@@ -67,5 +98,6 @@ const updateOrder = async (
 
 export const orderServices = {
     getAllOrder,
-    updateOrder
+    updateOrder,
+    postOrder
 }

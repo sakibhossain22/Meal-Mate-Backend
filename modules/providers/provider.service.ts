@@ -9,6 +9,9 @@ const providerDetails = async (id: string) => {
     const data = await prisma.providerProfile.findUniqueOrThrow({
         where: {
             id: id
+        },
+        include: {
+            meals: true
         }
     })
     return data

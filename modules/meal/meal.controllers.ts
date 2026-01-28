@@ -2,8 +2,9 @@ import { Request, Response } from "express"
 import { mealServices } from "./meal.services"
 
 const getMeal = async (req: Request, res: Response) => {
+
     try {
-        const data = await mealServices.getAllMeal()
+        const data = await mealServices.getAllMeal(req.query)
         res.status(200).json({
             success: true,
             ok: true,

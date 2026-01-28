@@ -3,14 +3,48 @@ import { AppError } from "../../src/error/AppError"
 import { prisma } from "../../src/lib/prisma"
 import { MealType } from "../../src/types/types"
 
-const getAllMeal = async () => {
-    const data = await prisma.meal.findMany()
-    return data
-}
+const getAllMeal = async (query: any) => {
+    const { orderby = "desc", category } = query;
+
+    const data = await prisma.meal.findMany({
+        where: {
+            ...(category && {
+                category: {
+                    name: category,
+                },
+            }),
+        },
+        orderBy: {
+            price: orderby === "asc" ? "asc" : "desc",
+        },
+        include: {
+            category: true,
+            provider: {
+                omit: {
+                    updatedAt: true,
+                    createdAt: true
+                },
+            },
+            reviews: true
+        },
+    });
+
+    return data;
+};
+
 const getMealDetails = async (id: string) => {
     const data = await prisma.meal.findUnique({
         where: {
             id: id
+        },
+        include: {
+            provider: {
+                omit: {
+                    createdAt: true,
+                    updatedAt: true
+                }
+            },
+            reviews: true
         }
     })
     return data
