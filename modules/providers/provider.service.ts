@@ -1,4 +1,91 @@
 import { prisma } from "../../src/lib/prisma"
+import { UserType } from "../../src/types/types";
+
+
+const providerStats = async (user: UserType) => {
+  const provider = await prisma.providerProfile.findUniqueOrThrow({
+    where: { userId: user.id },
+  });
+
+  const [
+    totalMeals,
+    availableMeals,
+    unavailableMeals,
+    orderItems,
+    revenueResult,
+    reviewAggregate,
+  ] = await Promise.all([
+    prisma.meal.count({
+      where: { providerProfileId: provider.id },
+    }),
+    prisma.meal.count({
+      where: {
+        providerProfileId: provider.id,
+        isAvailable: true,
+      },
+    }),
+    prisma.meal.count({
+      where: {
+        providerProfileId: provider.id,
+        isAvailable: false,
+      },
+    }),
+    prisma.orderItem.findMany({
+      where: {
+        meal: {
+          providerProfileId: provider.id,
+        },
+      },
+      include: {
+        order: true,
+      },
+    }),
+    prisma.orderItem.aggregate({
+      where: {
+        meal: {
+          providerProfileId: provider.id,
+        },
+      },
+      _sum: { price: true },
+    }),
+    prisma.review.aggregate({
+      where: {
+        meal: {
+          providerProfileId: provider.id,
+        },
+      },
+      _count: { id: true },
+      _avg: { rating: true },
+    }),
+  ]);
+
+  const uniqueOrders = new Set(orderItems.map(i => i.orderId));
+  const uniqueCustomers = new Set(
+    orderItems.map(i => i.order.customerId)
+  );
+
+  return {
+    meals: {
+      total: totalMeals,
+      available: availableMeals,
+      unavailable: unavailableMeals,
+    },
+    orders: {
+      totalOrderItems: orderItems.length,
+      totalOrders: uniqueOrders.size,
+      revenue: revenueResult._sum.price || 0,
+    },
+    customers: {
+      unique: uniqueCustomers.size,
+    },
+    reviews: {
+      total: reviewAggregate._count.id,
+      averageRating: Number(
+        (reviewAggregate._avg.rating || 0).toFixed(1)
+      ),
+    },
+  };
+};
 
 
 const getAllProvider = async () => {
@@ -21,5 +108,6 @@ const providerDetails = async (id: string) => {
 
 export const providerServices = {
     getAllProvider,
-    providerDetails
+    providerDetails,
+    providerStats
 }

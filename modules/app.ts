@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { toNodeHandler } from "better-auth/node";
 import { auth } from '../src/lib/auth';
 import cors from 'cors';
@@ -24,7 +24,9 @@ app.use("/orders", orderRouter)
 app.use('/admin', adminRouter)
 app.use('/customer', customerRouter)
 app.use("/provider", providerRouter)
+app.get('/api/auth/me', async (req: Request, res: Response) => {
 
+})
 
 app.use(notFound)
 app.use(globalErrorHandler)
