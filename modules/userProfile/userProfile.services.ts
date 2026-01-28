@@ -1,4 +1,3 @@
-import { auth } from "../../src/lib/auth";
 import { prisma } from "../../src/lib/prisma";
 import { UserType } from "../../src/types/types";
 
@@ -12,8 +11,28 @@ const userProfile = async (user: UserType) => {
 
     return data;
 };
+const updateUserProfile = async (bodyData: any, user: UserType) => {
+    const updateData = {
+        name: bodyData.name,
+        phone: bodyData.phone,
+    }
+    if (bodyData.email) {
+        if (bodyData.email !== user.email) {
+            throw new Error("You Are not authorized to update this info")
+        }
+    }
+    const data = await prisma.user.update({
+        where: {
+            email: user.email
+        },
+        data: updateData
+    })
+
+    return data;
+};
 
 
 export const userProfileService = {
-    userProfile
+    userProfile,
+    updateUserProfile
 }
