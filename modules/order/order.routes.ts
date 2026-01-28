@@ -10,5 +10,6 @@ router.patch("/provider/update-order/:id", auth(UserRole.PROVIDER), orderControl
 // customer
 router.post('/', auth(UserRole.CUSTOMER),orderController.postOrder)
 router.get('/customer', auth(UserRole.CUSTOMER),orderController.getOrders)
+router.get('/:id', auth(UserRole.CUSTOMER),orderController.singleOrderDetails)
 
 export const orderRouter = router

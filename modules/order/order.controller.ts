@@ -68,6 +68,28 @@ const getOrders = async (req: Request, res: Response) => {
             );
     }
 }
+const singleOrderDetails = async (req: Request, res: Response) => {
+    const { id } = req.params
+    try {
+        const data = await orderServices.singleOrderDetails(req.user as UserType, id as string)
+        res.status(200).json({
+            success: true,
+            ok: true,
+            data,
+        })
+
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to Fetch Order"
+        res.status(500)
+            .json(
+                {
+                    success: false,
+                    data: null,
+                    error: errorMessage
+                }
+            );
+    }
+}
 const updateOrder = async (req: Request, res: Response) => {
     const { id } = req.params
 
@@ -96,5 +118,6 @@ export const orderController = {
     getAllOrder,
     updateOrder,
     postOrder,
-    getOrders
+    getOrders,
+    singleOrderDetails
 }

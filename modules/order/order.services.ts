@@ -83,6 +83,34 @@ const getOrders = async (user: UserType) => {
         },
     });
 };
+const singleOrderDetails = async (user: UserType, id: string) => {
+  const order = await prisma.order.findUniqueOrThrow({
+    where: {
+      id,
+    },
+    include: {
+      customer: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      items: {
+        include: {
+          meal: true,
+        },
+      },
+    },
+  });
+
+  // authorization
+  if (order.customerId !== user.id && user.role !== "ADMIN") {
+    throw new Error("You are not allowed to view this order");
+  }
+
+  return order;
+};
 
 
 
@@ -124,5 +152,6 @@ export const orderServices = {
     getAllOrder,
     updateOrder,
     postOrder,
-    getOrders
+    getOrders,
+    singleOrderDetails
 }
