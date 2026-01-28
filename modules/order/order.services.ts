@@ -33,31 +33,55 @@ const getAllOrder = async (user: UserType) => {
     return data;
 };
 const postOrder = async (user: UserType, bodyData: any) => {
-  const order = await prisma.order.create({
-    data: {
-      customerId: user.id,
-      totalPrice: bodyData.totalPrice,
-    },
-  });
-  const orderItemsData = bodyData.items.map((item: any) => ({
-    orderId: order.id,
-    mealId: item.mealId,
-    quantity: item.quantity,
-    price: item.price,
-  }));
-  await prisma.orderItem.createMany({
-    data: orderItemsData,
-  });
-  return prisma.order.findUnique({
-    where: { id: order.id },
-    include: {
-      items: {
-        include: {
-          meal: true,
+    const order = await prisma.order.create({
+        data: {
+            customerId: user.id,
+            totalPrice: bodyData.totalPrice,
         },
-      },
-    },
-  });
+    });
+    const orderItemsData = bodyData.items.map((item: any) => ({
+        orderId: order.id,
+        mealId: item.mealId,
+        quantity: item.quantity,
+        price: item.price,
+    }));
+    await prisma.orderItem.createMany({
+        data: orderItemsData,
+    });
+    return prisma.order.findUnique({
+        where: { id: order.id },
+        include: {
+            items: {
+                include: {
+                    meal: true,
+                },
+            },
+        },
+    });
+};
+const getOrders = async (user: UserType) => {
+    return prisma.order.findMany({
+        where: {
+            customerId: user.id,
+        },
+        orderBy: {
+            createdAt: "desc",
+        },
+        include: {
+            items: {
+                include: {
+                    meal: {
+                        select: {
+                            id: true,
+                            name: true,
+                            price: true,
+                            image: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
 };
 
 
@@ -99,5 +123,6 @@ const updateOrder = async (
 export const orderServices = {
     getAllOrder,
     updateOrder,
-    postOrder
+    postOrder,
+    getOrders
 }

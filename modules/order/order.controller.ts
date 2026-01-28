@@ -46,6 +46,28 @@ const postOrder = async (req: Request, res: Response) => {
             );
     }
 }
+const getOrders = async (req: Request, res: Response) => {
+
+    try {
+        const data = await orderServices.getOrders(req.user as UserType)
+        res.status(200).json({
+            success: true,
+            ok: true,
+            data,
+        })
+
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to Fetch Order"
+        res.status(500)
+            .json(
+                {
+                    success: false,
+                    data: null,
+                    error: errorMessage
+                }
+            );
+    }
+}
 const updateOrder = async (req: Request, res: Response) => {
     const { id } = req.params
 
@@ -73,5 +95,6 @@ const updateOrder = async (req: Request, res: Response) => {
 export const orderController = {
     getAllOrder,
     updateOrder,
-    postOrder
+    postOrder,
+    getOrders
 }
