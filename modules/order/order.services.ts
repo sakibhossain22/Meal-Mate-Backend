@@ -112,9 +112,6 @@ const singleOrderDetails = async (user: UserType, id: string) => {
   return order;
 };
 
-
-
-
 const updateOrder = async (
     bodyData: any,
     user: UserType,

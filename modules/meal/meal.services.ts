@@ -1,36 +1,58 @@
-import { MealWhereInput, ProviderProfileWhereInput } from "../../generated/prisma/models"
 import { AppError } from "../../src/error/AppError"
 import { prisma } from "../../src/lib/prisma"
 import { MealType } from "../../src/types/types"
 
 const getAllMeal = async (query: any) => {
-    const { orderby = "desc", category } = query;
+    const { orderby = "desc", category, page = 1, limit = 10 } = query;
+
+    const skip = (Number(page) - 1) * Number(limit);
+    const take = Number(limit);
 
     const data = await prisma.meal.findMany({
         where: {
             ...(category && {
                 category: {
                     name: category,
-                },
-            }),
+                }
+            })
         },
         orderBy: {
             price: orderby === "asc" ? "asc" : "desc",
         },
+        skip,
+        take,
         include: {
             category: true,
             provider: {
                 omit: {
                     updatedAt: true,
-                    createdAt: true
-                },
+                    createdAt: true,
+                }
             },
-            reviews: true
-        },
-    });
+            reviews: true,
+        }
+    })
+    const total = await prisma.meal.count({
+        where: {
+            ...(category && {
+                category: {
+                    name: category,
+                }
+            })
+        }
+    })
 
-    return data;
-};
+    return {
+        meals: data,
+        pagination: {
+            total,
+            page: Number(page),
+            limit: Number(limit),
+            totalPages: Math.ceil(total / Number(limit)),
+        }
+    }
+}
+
 
 const getMealDetails = async (id: string) => {
     const data = await prisma.meal.findUnique({

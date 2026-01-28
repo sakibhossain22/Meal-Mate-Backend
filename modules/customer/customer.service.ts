@@ -47,12 +47,6 @@ const customerStat = async (user: UserType) => {
   };
 };
 
-
-
-
-
-
-
 export const customerService = {
     customerOrders,
     customerStat
