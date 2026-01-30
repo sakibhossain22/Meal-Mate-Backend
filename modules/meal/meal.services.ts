@@ -53,7 +53,6 @@ const getAllMeal = async (query: any) => {
     }
 }
 
-
 const getMealDetails = async (id: string) => {
     const data = await prisma.meal.findUnique({
         where: {
@@ -66,10 +65,43 @@ const getMealDetails = async (id: string) => {
                     updatedAt: true
                 }
             },
-            reviews: true
+            reviews: {
+                include: {
+                    customer: {
+                        select: {
+                            email: true,
+                            name: true,
+                            image: true,
+
+                        }
+                    }
+                }
+            },
         }
     })
     return data
+}
+const addReview = async (bodyData: any) => {
+    const { rating, mealId, comment, customerId } = bodyData
+
+    if (!rating || !mealId || !comment) {
+        throw new Error("Rating, comment, and mealId are required")
+    }
+
+    const review = await prisma.review.create({
+        data: {
+            rating,
+            comment,
+            mealId,
+            customerId,
+        },
+        include: {
+            meal: true,
+            customer: true
+        }
+    })
+
+    return review
 }
 const addMeal = async (bodyData: MealType, user: { id: string }) => {
     const { id } = user
@@ -139,10 +171,22 @@ const deleteMeal = async (user: { id: string }, mealId: string) => {
     })
     return updateMealData
 }
+
+const Allcategories = async () => {
+    const data = await prisma.category.findMany({
+        include: {
+            meals: true,
+        },
+    });
+
+    return data;
+};
 export const mealServices = {
     getAllMeal,
     getMealDetails,
     addMeal,
     updateMeal,
-    deleteMeal
+    deleteMeal,
+    Allcategories,
+    addReview
 }

@@ -3,17 +3,16 @@ import { UserType } from "../../src/types/types";
 
 
 const providerStats = async (user: UserType) => {
+  console.log(user)
   const provider = await prisma.providerProfile.findUniqueOrThrow({
-    where: { userId: user.id },
+    where: {
+      userId: user.id
+    }
   });
 
+
   const [
-    totalMeals,
-    availableMeals,
-    unavailableMeals,
-    orderItems,
-    revenueResult,
-    reviewAggregate,
+    totalMeals, availableMeals, unavailableMeals, orderItems, revenueResult, reviewAggregate,
   ] = await Promise.all([
     prisma.meal.count({
       where: { providerProfileId: provider.id },
@@ -89,25 +88,25 @@ const providerStats = async (user: UserType) => {
 
 
 const getAllProvider = async () => {
-    const data = await prisma.providerProfile.findMany()
-    return data
+  const data = await prisma.providerProfile.findMany()
+  return data
 }
 const providerDetails = async (id: string) => {
-    const data = await prisma.providerProfile.findUniqueOrThrow({
-        where: {
-            id: id
-        },
-        include: {
-            meals: true
-        }
-    })
-    return data
+  const data = await prisma.providerProfile.findUniqueOrThrow({
+    where: {
+      id: id
+    },
+    include: {
+      meals: true
+    }
+  })
+  return data
 }
 
 
 
 export const providerServices = {
-    getAllProvider,
-    providerDetails,
-    providerStats
+  getAllProvider,
+  providerDetails,
+  providerStats
 }

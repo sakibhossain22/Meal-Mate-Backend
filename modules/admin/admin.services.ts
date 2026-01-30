@@ -3,7 +3,7 @@ import { prisma } from "../../src/lib/prisma"
 
 const adminStats = async () => {
   const [
-    totalUsers,totalCustomers,totalProviders,activeUsers, totalMeals,availableMeals,unavailableMeals,totalOrders,ordersByStatus,revenueResult,providersWithMeals,totalProviderProfiles,
+    totalUsers, totalCustomers, totalProviders, activeUsers, totalMeals, availableMeals, unavailableMeals, totalOrders, ordersByStatus, revenueResult, providersWithMeals, totalProviderProfiles,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.user.count({ where: { role: "CUSTOMER" } }),
@@ -72,8 +72,21 @@ const getAllUsers = async () => {
   return data;
 };
 const getAllOrders = async () => {
-  const data = await prisma.order.findMany();
-  return data;
+  const order = await prisma.order.findMany({
+    include: {
+      customer: true
+    }
+  });
+  const orderItem = await prisma.orderItem.findMany({
+    include: {
+      meal: {
+        include: {
+          provider: true
+        }
+      }
+    }
+  });
+  return { order, orderItem };
 };
 const Allcategories = async () => {
   const data = await prisma.category.findMany({
@@ -86,20 +99,20 @@ const Allcategories = async () => {
 };
 
 
-const updateUserStatus = async (bodyData : any, id: string) => {
-    const data = await prisma.user.update({
-        where: {
-            id: id
-        },
-        data: bodyData
-    })
-    return data
+const updateUserStatus = async (bodyData: any, id: string) => {
+  const data = await prisma.user.update({
+    where: {
+      id: id
+    },
+    data: bodyData
+  })
+  return data
 }
 
 export const adminService = {
-    getAllUsers,
-    updateUserStatus,
-    getAllOrders,
-    Allcategories,
-    adminStats
+  getAllUsers,
+  updateUserStatus,
+  getAllOrders,
+  Allcategories,
+  adminStats
 }
