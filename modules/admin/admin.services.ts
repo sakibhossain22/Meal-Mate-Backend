@@ -97,6 +97,15 @@ const Allcategories = async () => {
 
   return data;
 };
+const getAllReviews = async () => {
+  const data = await prisma.review.findMany({
+    include : {
+      customer : true,
+      meal : true,
+    }
+  })
+  return data;
+};
 
 
 const updateUserStatus = async (bodyData: any, id: string) => {
@@ -129,5 +138,6 @@ export const adminService = {
   updateUserStatus,
   getAllOrders,
   Allcategories,
-  adminStats
+  adminStats,
+  getAllReviews
 }
