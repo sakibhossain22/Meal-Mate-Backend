@@ -11,5 +11,6 @@ router.get('/all-users', auth(UserRole.ADMIN), adminController.getAllUsers)
 router.get('/all-orders', auth(UserRole.ADMIN), adminController.getAllOrders)
 router.post('/add-category', auth(UserRole.ADMIN), adminController.addCategory)
 router.patch('/update-user/:id', auth(UserRole.ADMIN), adminController.updateUserStatus)
+router.delete('/delete-reviews/:id', auth(UserRole.ADMIN), adminController.deleteReview)
 
 export const adminRouter = router

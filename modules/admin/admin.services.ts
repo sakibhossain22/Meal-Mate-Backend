@@ -99,9 +99,17 @@ const Allcategories = async () => {
 };
 const getAllReviews = async () => {
   const data = await prisma.review.findMany({
-    include : {
-      customer : true,
-      meal : true,
+    include: {
+      customer: true,
+      meal: true,
+    }
+  })
+  return data;
+};
+const deleteReview = async (id: string) => {
+  const data = await prisma.review.delete({
+    where: {
+      id: id
     }
   })
   return data;
@@ -139,5 +147,6 @@ export const adminService = {
   getAllOrders,
   Allcategories,
   adminStats,
-  getAllReviews
+  getAllReviews,
+  deleteReview
 }

@@ -65,6 +65,28 @@ const getAllReviews = async (req: Request, res: Response) => {
             );
     }
 }
+const deleteReview = async (req: Request, res: Response) => {
+    const { id } = req.params
+    try {
+        const data = await adminService.deleteReview(id as string)
+        res.status(200).json({
+            success: true,
+            ok: true,
+            data,
+        })
+
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to Get Meal"
+        res.status(500)
+            .json(
+                {
+                    success: false,
+                    data: null,
+                    error: errorMessage
+                }
+            );
+    }
+}
 const getAllUsers = async (req: Request, res: Response) => {
     try {
         const data = await adminService.getAllUsers()
@@ -158,5 +180,6 @@ export const adminController = {
     getAllOrders,
     Allcategories,
     adminStats,
-    getAllReviews
+    getAllReviews,
+    deleteReview
 }
