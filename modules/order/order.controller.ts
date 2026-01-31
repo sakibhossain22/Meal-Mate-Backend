@@ -94,7 +94,7 @@ const updateOrder = async (req: Request, res: Response) => {
     const { id } = req.params
 
     try {
-        const data = await orderServices.updateOrder(req.body, req.user as UserType, id as string)
+        const data = await orderServices.updateOrder(req.body, id as string)
         res.status(200).json({
             success: true,
             ok: true,

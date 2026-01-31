@@ -108,9 +108,24 @@ const updateUserStatus = async (bodyData: any, id: string) => {
   })
   return data
 }
+const addCategory = async (bodyData: { id: string, name: string },) => {
 
+  const getCategory = await prisma.category.findUnique({
+    where: {
+      id: bodyData.id
+    }
+  })
+  if (getCategory?.id === bodyData.id) {
+    throw new Error("Category Already Exists")
+  }
+  const data = await prisma.category.create({
+    data: bodyData
+  })
+  return data
+}
 export const adminService = {
   getAllUsers,
+  addCategory,
   updateUserStatus,
   getAllOrders,
   Allcategories,

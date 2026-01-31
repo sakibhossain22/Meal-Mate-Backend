@@ -70,9 +70,9 @@ const deleteFromCart = async (req: Request, res: Response) => {
     }
 }
 const clearCart = async (req: Request, res: Response) => {
-    const { id } = req.body
+
     try {
-        const data = await cartService.clearCart(id as any)
+        const data = await cartService.clearCart(req.body)
         res.status(200).json({
             success: true,
             ok: true,

@@ -39,15 +39,33 @@ const postOrder = async (user: UserType, bodyData: any) => {
             totalPrice: bodyData.totalPrice,
         },
     });
+
     const orderItemsData = bodyData.items.map((item: any) => ({
         orderId: order.id,
         mealId: item.mealId,
         quantity: item.quantity,
         price: item.price,
     }));
+
     await prisma.orderItem.createMany({
         data: orderItemsData,
     });
+
+    if (bodyData.items && bodyData.items.length > 0) {
+        for (const item of bodyData.items) {
+            if (item.id) {
+                await prisma.cartItem.delete({
+                    where: { id: item.id }
+                }).catch(() => null);
+            }
+            else if (item.cartId) {
+                await prisma.cartItem.deleteMany({
+                    where: { cartId: item.cartId }
+                });
+            }
+        }
+    }
+
     return prisma.order.findUnique({
         where: { id: order.id },
         include: {
@@ -84,58 +102,42 @@ const getOrders = async (user: UserType) => {
     });
 };
 const singleOrderDetails = async (user: UserType, id: string) => {
-  const order = await prisma.order.findUniqueOrThrow({
-    where: {
-      id,
-    },
-    include: {
-      customer: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
-      },
-      items: {
-        include: {
-          meal: true,
-        },
-      },
-    },
-  });
-
-  // authorization
-  if (order.customerId !== user.id && user.role !== "ADMIN") {
-    throw new Error("You are not allowed to view this order");
-  }
-
-  return order;
-};
-
-const updateOrder = async (
-    bodyData: any,
-    user: UserType,
-    id: string
-) => {
-    const providerProfile = await prisma.providerProfile.findUniqueOrThrow({
-        where: {
-            userId: user.id,
-        },
-    });
-    const orderItem = await prisma.orderItem.findUniqueOrThrow({
+    const order = await prisma.order.findUniqueOrThrow({
         where: {
             id,
         },
         include: {
-            meal: true,
+            customer: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                },
+            },
+            items: {
+                include: {
+                    meal: true,
+                },
+            },
         },
     });
-    if (orderItem.meal.providerProfileId !== providerProfile.id) {
-        throw new Error("You are not authorized to update this order");
+
+    // authorization
+    if (order.customerId !== user.id && user.role !== "ADMIN") {
+        throw new Error("You are not allowed to view this order");
     }
+
+    return order;
+};
+
+const updateOrder = async (
+    bodyData: any,
+    id: string
+) => {
+
     const updatedOrder = await prisma.order.update({
         where: {
-            id: orderItem.orderId,
+            id: id,
         },
         data: bodyData
     });

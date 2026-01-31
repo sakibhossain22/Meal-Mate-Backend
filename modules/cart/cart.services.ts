@@ -45,21 +45,34 @@ const getCart = async (user: UserType) => {
 
     return data;
 };
-const deleteFromCart = async (itemId: string) => {
+const deleteFromCart = async (itemId: any) => {
     return await prisma.cartItem.delete({
         where: {
             id: itemId
         }
     });
 };
-const clearCart = async (cartId: string) => {
-    await prisma.cartItem.deleteMany({
-        where: {
-            cartId
-        }
-    });
-};
+const clearCart = async (orderData: any) => {
+    try {
 
+        const cartIds = [...new Set(orderData.items.map((item: any) => item.cartId as string))] as string[];
+        console.log(cartIds);
+        if (cartIds.length === 0) return;
+
+        const result = await prisma.cartItem.deleteMany({
+            where: {
+                cartId: {
+                    in: cartIds
+                }
+            }
+        });
+
+        return result;
+    } catch (error) {
+        console.error("Error clearing cart:", error);
+        throw error;
+    }
+};
 
 
 export const cartService = {

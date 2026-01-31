@@ -23,6 +23,27 @@ const adminStats = async (req: Request, res: Response) => {
             );
     }
 }
+const addCategory = async (req: Request, res: Response) => {
+    try {
+        const data = await adminService.addCategory(req.body)
+        res.status(200).json({
+            success: true,
+            ok: true,
+            data,
+        })
+
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to add Category"
+        res.status(500)
+            .json(
+                {
+                    success: false,
+                    data: null,
+                    error: errorMessage
+                }
+            );
+    }
+}
 const getAllUsers = async (req: Request, res: Response) => {
     try {
         const data = await adminService.getAllUsers()
@@ -111,6 +132,7 @@ const updateUserStatus = async (req: Request, res: Response) => {
 
 export const adminController = {
     getAllUsers,
+    addCategory,
     updateUserStatus,
     getAllOrders,
     Allcategories,

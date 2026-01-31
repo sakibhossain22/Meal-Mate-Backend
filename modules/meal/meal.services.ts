@@ -66,13 +66,15 @@ const getMealDetails = async (id: string) => {
                 }
             },
             reviews: {
+                orderBy: {
+                    createdAt: 'desc'
+                },
                 include: {
                     customer: {
                         select: {
                             email: true,
                             name: true,
                             image: true,
-
                         }
                     }
                 }
@@ -82,6 +84,7 @@ const getMealDetails = async (id: string) => {
     return data
 }
 const addReview = async (bodyData: any) => {
+    console.log(bodyData);
     const { rating, mealId, comment, customerId } = bodyData
 
     if (!rating || !mealId || !comment) {
@@ -92,15 +95,15 @@ const addReview = async (bodyData: any) => {
         data: {
             rating,
             comment,
-            mealId,
             customerId,
+            mealId
         },
         include: {
             meal: true,
             customer: true
         }
     })
-
+    console.log(review);
     return review
 }
 const addMeal = async (bodyData: MealType, user: { id: string }) => {
