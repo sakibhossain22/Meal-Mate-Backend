@@ -15,6 +15,7 @@ const updateUserProfile = async (bodyData: any, user: UserType) => {
     const updateData = {
         name: bodyData.name,
         phone: bodyData.phone,
+        image: bodyData.image
     }
     if (bodyData.email) {
         if (bodyData.email !== user.email) {

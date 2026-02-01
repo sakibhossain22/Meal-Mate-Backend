@@ -33,6 +33,7 @@ const getAllOrder = async (user: UserType) => {
     return data;
 };
 const postOrder = async (user: UserType, bodyData: any) => {
+    const address = { address: bodyData.address }
     const order = await prisma.order.create({
         data: {
             customerId: user.id,
@@ -44,12 +45,14 @@ const postOrder = async (user: UserType, bodyData: any) => {
         orderId: order.id,
         mealId: item.mealId,
         quantity: item.quantity,
-        price: item.price,
+        price: item.price.toFixed(2),
+        address: bodyData.address
     }));
 
-    await prisma.orderItem.createMany({
-        data: orderItemsData,
+    const ress = await prisma.orderItem.createMany({
+        data: orderItemsData
     });
+    console.log(ress);
 
     if (bodyData.items && bodyData.items.length > 0) {
         for (const item of bodyData.items) {

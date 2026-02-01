@@ -111,6 +111,7 @@ model OrderItem {
   meal     Meal   @relation(fields: [mealId], references: [id])
   quantity Int
   price    Float
+  address  String?
 }
 
 model Cart {

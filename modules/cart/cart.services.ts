@@ -16,6 +16,15 @@ const addToCart = async (bodyData: any, userId: string,) => {
     if (!meal) {
         throw new Error("Meal not found");
     }
+
+    const isExist = await prisma.cartItem.findUnique({
+        where: {
+            id: mealId
+        }
+    })
+    if (isExist) {
+        throw new Error("Meal Already added to Card")
+    }
     const cartItem = await prisma.cartItem.create({
         data: {
             cartId: cart.id,

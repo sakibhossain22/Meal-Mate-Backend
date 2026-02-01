@@ -108,8 +108,6 @@ const addReview = async (bodyData: any) => {
 }
 const addMeal = async (bodyData: MealType, user: { id: string }) => {
     const { id } = user
-    console.log(bodyData);
-    console.log(id);
     const findProviderId = await prisma.providerProfile.findFirstOrThrow({
         where: {
             userId: id
