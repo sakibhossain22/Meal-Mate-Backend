@@ -88,7 +88,12 @@ const providerStats = async (user: UserType) => {
 
 
 const getAllProvider = async () => {
-  const data = await prisma.providerProfile.findMany()
+  const data = await prisma.providerProfile.findMany({
+    include: {
+      user: true,
+      meals: true
+    }
+  })
   return data
 }
 const providerDetails = async (id: string) => {
@@ -97,6 +102,7 @@ const providerDetails = async (id: string) => {
       id: id
     },
     include: {
+      user: true, 
       meals: true
     }
   })
