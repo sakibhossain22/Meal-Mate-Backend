@@ -1,15 +1,16 @@
 import { UserRole } from "../lib/middlewares/auth";
 import { prisma } from "../lib/prisma";
 
-async function seedAdmin() {
+async function seedAdminUser() {
     try {
         const adminData = {
             name: "Shakib Admin",
-            email: "admin@admin.com",
+            email: "admin70@admin.com",
             role: UserRole.ADMIN,
-            password: "admin1234"
+            password: "admin1234",
+            phone: "01996818622",
+            status: "ACTIVE"
         }
-        // Seed admin user logic here
         const admingExists = await prisma.user.findUnique({
             where: {
                 email: adminData.email
@@ -19,8 +20,8 @@ async function seedAdmin() {
         if (admingExists) {
             throw new Error('This Email Already Registered ... !!')
         }
-        // create Admin
-        const signUpAdmin = await fetch('http://localhost:3000/api/auth/sign-up/email', {
+        const backendUrl = process.env.BETTER_AUTH_URL
+        const signUpAdmin = await fetch(`${backendUrl}/api/auth/sign-up/email`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -28,19 +29,19 @@ async function seedAdmin() {
             body: JSON.stringify(adminData)
         })
 
-        if(signUpAdmin.ok) {
+        if (signUpAdmin.ok) {
             await prisma.user.update({
-                where : {
-                    email : adminData.email
+                where: {
+                    email: adminData.email
                 },
-                data : {
-                    emailVerified : true
+                data: {
+                    emailVerified: true
                 }
             })
         }
-    }catch (error) {
+    } catch (error) {
         console.error(error);
     }
 
 }
-seedAdmin()
+seedAdminUser()
