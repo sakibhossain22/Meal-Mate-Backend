@@ -107,24 +107,28 @@ const addReview = async (bodyData: any) => {
     return review
 }
 const addMeal = async (bodyData: MealType, user: { id: string }) => {
-    const { id } = user
-    const findProviderId = await prisma.providerProfile.findFirstOrThrow({
-        where: {
-            userId: id
-        }
-    })
-    console.log(findProviderId);
-    const newData = { ...bodyData, providerProfileId: findProviderId.id }
-    const data = await prisma.meal.create({
-        data: newData
-    })
-    return data
+    // console.log(bodyData);
+
+    try {
+        const { id } = user
+        const findProviderId = await prisma.providerProfile.findFirstOrThrow({
+            where: {
+                userId: id
+            }
+        })
+        const newData = { ...bodyData, providerProfileId: findProviderId.id }
+
+        const data = await prisma.meal.create({
+            data: newData
+        })
+        console.log(data);
+        return data
+    } catch (error) {
+        console.error("Database Error:", error);
+    }
 }
 const updateMeal = async (bodyData: MealType, user: { id: string }, mealId: string) => {
     const { id: userId } = user
-    console.log("id", userId);
-    console.log("Mealid", mealId)
-    console.log("bodyData", bodyData)
     const provider = await prisma.providerProfile.findUniqueOrThrow({
         where: {
             userId: userId
@@ -134,7 +138,6 @@ const updateMeal = async (bodyData: MealType, user: { id: string }, mealId: stri
             userId: true
         }
     })
-    console.log(provider);
     if (provider.userId !== userId) {
         throw new Error("Your are not the author of this Meal")
     }

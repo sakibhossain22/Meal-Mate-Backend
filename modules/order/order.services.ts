@@ -45,10 +45,9 @@ const postOrder = async (user: UserType, bodyData: any) => {
         orderId: order.id,
         mealId: item.mealId,
         quantity: item.quantity,
-        price: item.price.toFixed(2),
+        price: item.price,
         address: bodyData.address
     }));
-
     const ress = await prisma.orderItem.createMany({
         data: orderItemsData
     });
@@ -137,7 +136,7 @@ const updateOrder = async (
     bodyData: any,
     id: string
 ) => {
-
+    console.log(bodyData);
     const updatedOrder = await prisma.order.update({
         where: {
             id: id,

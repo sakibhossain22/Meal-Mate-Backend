@@ -28,5 +28,9 @@ app.use("/provider", providerRouter)
 app.use("/profile", userProfileRouter)
 app.use('/cart', cartRouter)
 
+
+app.get('/', async (req: Request, res: Response) => {
+    res.send("Hello Meal Mate Server")
+})
 app.use(notFound)
 export default app;

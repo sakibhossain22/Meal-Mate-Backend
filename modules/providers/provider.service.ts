@@ -96,13 +96,19 @@ const getAllProvider = async () => {
   })
   return data
 }
+const createProvider = async (bodyData: { userId: string, businessName: string, address: string, contactNumber: string, description: string }) => {
+  const data = await prisma.providerProfile.create({
+    data: bodyData
+  })
+  return data
+}
 const providerDetails = async (id: string) => {
   const data = await prisma.providerProfile.findUniqueOrThrow({
     where: {
       id: id
     },
     include: {
-      user: true, 
+      user: true,
       meals: true
     }
   })
@@ -111,8 +117,26 @@ const providerDetails = async (id: string) => {
 
 
 
+const getAllProviderMeal = async (user: UserType) => {
+  console.log(user);
+  const data = await prisma.providerProfile.findUniqueOrThrow({
+    where: {
+      userId: user.id
+    },
+    include: {
+      meals: true
+    }
+  })
+  console.log(data);
+  return data
+}
+
+
+
 export const providerServices = {
   getAllProvider,
   providerDetails,
-  providerStats
+  providerStats,
+  createProvider,
+  getAllProviderMeal
 }

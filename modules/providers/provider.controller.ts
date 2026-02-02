@@ -66,9 +66,55 @@ const providerDetails = async (req: Request, res: Response) => {
             );
     }
 }
+const createProvider = async (req: Request, res: Response) => {
+    const { id } = req.params
+    try {
+        const data = await providerServices.createProvider(req.body as any)
+        res.status(200).json({
+            success: true,
+            ok: true,
+            data,
+        })
+
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to Create Provider"
+        res.status(500)
+            .json(
+                {
+                    success: false,
+                    data: null,
+                    error: errorMessage
+                }
+            );
+    }
+}
+const getAllProviderMeal = async (req: Request, res: Response) => {
+    console.log(req.user);
+    try {
+        const data = await providerServices.getAllProviderMeal(req.user as UserType)
+        res.status(200).json({
+            success: true,
+            ok: true,
+            data,
+        })
+
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to Create Provider"
+        res.status(500)
+            .json(
+                {
+                    success: false,
+                    data: null,
+                    error: errorMessage
+                }
+            );
+    }
+}
 
 export const providerController = {
     getAllProvider,
     providerDetails,
-    providerStats
+    providerStats,
+    createProvider,
+    getAllProviderMeal
 }

@@ -6,7 +6,7 @@ import { orderController } from './order.controller';
 const router = express.Router()
 // Provider
 router.get("/provider", auth(UserRole.PROVIDER), orderController.getAllOrder)
-router.patch("/provider/update-order/:id", auth(UserRole.PROVIDER), orderController.updateOrder)
+router.patch("/provider/update-order/:id", auth(UserRole.PROVIDER,UserRole.CUSTOMER), orderController.updateOrder)
 // customer
 router.post('/', auth(UserRole.CUSTOMER),orderController.postOrder)
 router.get('/customer', auth(UserRole.CUSTOMER),orderController.getOrders)

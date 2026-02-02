@@ -125,14 +125,14 @@ const updateUserStatus = async (bodyData: any, id: string) => {
   })
   return data
 }
-const addCategory = async (bodyData: { id: string, name: string },) => {
-
+const addCategory = async (bodyData: {name: string },) => {
+  console.log(bodyData);
   const getCategory = await prisma.category.findUnique({
     where: {
-      id: bodyData.id
+      name: bodyData.name
     }
   })
-  if (getCategory?.id === bodyData.id) {
+  if (getCategory?.name === bodyData.name) {
     throw new Error("Category Already Exists")
   }
   const data = await prisma.category.create({
