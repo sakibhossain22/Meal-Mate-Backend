@@ -1,0 +1,199 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  CUSTOMER
+  PROVIDER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BANNED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  COOKING
+  ON_THE_WAY
+  DELIVERED
+  CANCELLED
+}
+
+model User {
+  id            String           @id @default(uuid())
+  name          String
+  email         String           @unique
+  role          Role             @default(CUSTOMER)
+  image         String?
+  profile       ProviderProfile?
+  orders        Order[]
+  reviews       Review[]
+  emailVerified Boolean          @default(false)
+  phone         String?
+  status        UserStatus?      @default(ACTIVE)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  carts         Cart[]
+
+  @@map("user")
+}
+
+model ProviderProfile {
+  id            String   @id @default(uuid())
+  businessName  String
+  description   String?
+  address       String
+  contactNumber String
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id])
+  meals         Meal[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Category {
+  id    String @id @default(uuid())
+  name  String @unique
+  meals Meal[]
+}
+
+model Meal {
+  id                String          @id @default(uuid())
+  name              String
+  description       String?
+  price             Float
+  image             String?
+  isAvailable       Boolean         @default(true)
+  categoryId        String
+  category          Category        @relation(fields: [categoryId], references: [id])
+  providerProfileId String
+  provider          ProviderProfile @relation(fields: [providerProfileId], references: [id])
+  orderItems        OrderItem[]
+  reviews           Review[]
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  cartItems         CartItem[]
+}
+
+model Order {
+  id         String      @id @default(uuid())
+  status     OrderStatus @default(PENDING)
+  totalPrice Float
+  customerId String
+  customer   User        @relation(fields: [customerId], references: [id])
+  items      OrderItem[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model OrderItem {
+  id       String @id @default(uuid())
+  orderId  String
+  order    Order  @relation(fields: [orderId], references: [id])
+  mealId   String
+  meal     Meal   @relation(fields: [mealId], references: [id])
+  quantity Int
+  price    Float
+  address  String?
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("cart")
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  cartId    String
+  cart      Cart     @relation(fields: [cartId], references: [id])
+  mealId    String
+  meal      Meal     @relation(fields: [mealId], references: [id])
+  quantity  Int
+  price     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cart_item")
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  rating     Int
+  comment    String?
+  customerId String
+  customer   User     @relation(fields: [customerId], references: [id])
+  mealId     String
+  meal       Meal     @relation(fields: [mealId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
