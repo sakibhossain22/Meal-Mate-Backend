@@ -17,6 +17,7 @@ enum Role {
   PROVIDER
   DELIVERY  // যোগ করা হয়েছে
   ADMIN
+  SUPERADMIN
 }
 
 enum UserStatus {
