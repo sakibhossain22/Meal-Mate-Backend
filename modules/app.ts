@@ -15,7 +15,7 @@ import { cartRouter } from './cart/cart.routes';
 const app = express();
 app.use(express.json());
 app.use(cors({
-    origin: process.env.APP_URL || "http://localhost:5000",
+    origin: process.env.APP_URL, // Allow requests from the frontend URL
     credentials: true
 }));
 

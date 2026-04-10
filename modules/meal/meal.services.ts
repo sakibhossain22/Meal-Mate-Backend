@@ -3,19 +3,34 @@ import { prisma } from "../../src/lib/prisma"
 import { MealType } from "../../src/types/types"
 
 const getAllMeal = async (query: any) => {
-    const { orderby = "desc", category, page = 1, limit = 10 } = query;
-
+    const { orderby = "desc", category, page = 1, limit = 10, search } = query;
+    
     const skip = (Number(page) - 1) * Number(limit);
     const take = Number(limit);
 
-    const data = await prisma.meal.findMany({
-        where: {
-            ...(category && {
+    const whereCondition: any = {
+        AND: [
+            category ? {
                 category: {
                     name: category,
                 }
-            })
-        },
+            } : {},
+            search ? {
+                OR: [
+                    { name: { contains: search, mode: 'insensitive' } },
+                    { description: { contains: search, mode: 'insensitive' } },
+                    {
+                        category: {
+                            name: { contains: search, mode: 'insensitive' }
+                        }
+                    }
+                ]
+            } : {}
+        ]
+    };
+
+    const data = await prisma.meal.findMany({
+        where: whereCondition,
         orderBy: {
             price: orderby === "asc" ? "asc" : "desc",
         },
@@ -31,16 +46,11 @@ const getAllMeal = async (query: any) => {
             },
             reviews: true,
         }
-    })
+    });
+
     const total = await prisma.meal.count({
-        where: {
-            ...(category && {
-                category: {
-                    name: category,
-                }
-            })
-        }
-    })
+        where: whereCondition
+    });
 
     return {
         meals: data,
@@ -50,8 +60,8 @@ const getAllMeal = async (query: any) => {
             limit: Number(limit),
             totalPages: Math.ceil(total / Number(limit)),
         }
-    }
-}
+    };
+};
 
 const getMealDetails = async (id: string) => {
     const data = await prisma.meal.findUnique({
@@ -79,6 +89,7 @@ const getMealDetails = async (id: string) => {
                     }
                 }
             },
+            category: true,
         }
     })
     return data
