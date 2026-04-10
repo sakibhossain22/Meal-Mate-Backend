@@ -18,7 +18,9 @@ declare global {
 export enum UserRole {
     ADMIN = "ADMIN",
     CUSTOMER = "CUSTOMER",
-    PROVIDER = "PROVIDER"
+    PROVIDER = "PROVIDER",
+    SUPERADMIN = "SUPERADMIN",
+    DELIVERY = "DELIVERY"
 }
 const auth = (...role: UserRole[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {

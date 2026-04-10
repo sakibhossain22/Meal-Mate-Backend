@@ -15,7 +15,7 @@ datasource db {
 enum Role {
   CUSTOMER
   PROVIDER
-  DELIVERY  // যোগ করা হয়েছে
+  DELIVERY
   ADMIN
   SUPERADMIN
 }
@@ -65,20 +65,20 @@ model ProviderProfile {
   address       String
   contactNumber String
   userId        String   @unique
-  user          User     @relation(fields: [userId], references: [id])
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   meals         Meal[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
 
-// নতুন মডেল: ডেলিভারি ম্যান প্রোফাইল
 model DeliveryProfile {
   id            String   @id @default(uuid())
-  vehicleType   String?  // Bike, Cycle, Scooter ইত্যাদি
-  vehicleNumber String?  // গাড়ির নাম্বার (ঐচ্ছিক)
-  isAvailable   Boolean  @default(true) // বর্তমানে ডেলিভারি নিতে পারবে কি না
+  vehicleType   String?
+  vehicleNumber String?
+  isAvailable   Boolean  @default(true)
+  adminVerified Boolean  @default(false)
   userId        String   @unique
-  user          User     @relation(fields: [userId], references: [id])
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
@@ -99,7 +99,7 @@ model Meal {
   categoryId        String
   category          Category        @relation(fields: [categoryId], references: [id])
   providerProfileId String
-  provider          ProviderProfile @relation(fields: [providerProfileId], references: [id])
+  provider          ProviderProfile @relation(fields: [providerProfileId], references: [id], onDelete: Cascade)
   orderItems        OrderItem[]
   reviews           Review[]
   createdAt         DateTime        @default(now())

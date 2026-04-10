@@ -11,6 +11,7 @@ import { providerRouter } from './providers/provider.routes';
 import { userProfileRouter } from './userProfile/userProfile.routes';
 import { cartRouter } from './cart/cart.routes';
 import { deliveryRouter } from './delivery/delivery.routes';
+import { superAdminRouter } from './superadmin/superAdmin.routes';
 
 
 const app = express();
@@ -27,6 +28,7 @@ app.use('/admin', adminRouter)
 app.use('/customer', customerRouter)
 app.use("/provider", providerRouter)
 app.use("/delivery", deliveryRouter)
+app.use("/superadmin", superAdminRouter)
 app.use("/profile", userProfileRouter)
 app.use('/cart', cartRouter)
 
