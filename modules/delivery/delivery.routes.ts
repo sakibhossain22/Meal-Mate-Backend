@@ -6,14 +6,14 @@ const router = express.Router();
 
 router.post('/create', deliveryController.createDelivery);
 
-router.patch('/accept-order/:orderId',auth(UserRole.DELIVERY), deliveryController.acceptOrderService);
+router.patch('/accept-order',auth(UserRole.DELIVERY), deliveryController.acceptOrderService);
 
-router.patch('/update-status/:orderId',auth(UserRole.DELIVERY), deliveryController.updateDeliveryStatusService);
+router.patch('/update-status/',auth(UserRole.DELIVERY), deliveryController.updateDeliveryStatusService);
 
 router.patch('/toggle-availability',auth(UserRole.DELIVERY), deliveryController.toggleAvailabilityService);
 
-router.get('/stats/:deliveryManId',auth(UserRole.DELIVERY), deliveryController.getDeliveryStatsService);
+router.get('/stats',auth(UserRole.DELIVERY), deliveryController.getDeliveryStatsService);
 
-router.get('/history/:deliveryManId',auth(UserRole.DELIVERY), deliveryController.getDeliveryHistoryService);
+router.get('/history',auth(UserRole.DELIVERY), deliveryController.getDeliveryHistoryService);
 
 export const deliveryRouter = router;

@@ -12,6 +12,7 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
 enum Role {
   CUSTOMER
   PROVIDER
@@ -36,24 +37,24 @@ enum OrderStatus {
 }
 
 model User {
-  id              String           @id @default(uuid())
-  name            String
-  email           String           @unique
-  role            Role             @default(CUSTOMER)
-  image           String?
-  profile         ProviderProfile?
-  deliveryProfile DeliveryProfile? // ডেলিভারি ম্যান প্রোফাইলের সাথে রিলেশন
-  orders          Order[]
-  assignedDeliveries Order[]       @relation("DeliveryManOrders") // ডেলিভারি ম্যান যেসব অর্ডার পৌঁছে দেবে
-  reviews         Review[]
-  emailVerified   Boolean          @default(false)
-  phone           String?
-  status          UserStatus?      @default(ACTIVE)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  sessions        Session[]
-  accounts        Account[]
-  carts           Cart[]
+  id                 String           @id @default(uuid())
+  name               String
+  email              String           @unique
+  role               Role             @default(CUSTOMER)
+  image              String?
+  profile            ProviderProfile?
+  deliveryProfile    DeliveryProfile? // ডেলিভারি ম্যান প্রোফাইলের সাথে রিলেশন
+  orders             Order[]
+  assignedDeliveries Order[]          @relation("DeliveryManOrders") // ডেলিভারি ম্যান যেসব অর্ডার পৌঁছে দেবে
+  reviews            Review[]
+  emailVerified      Boolean          @default(false)
+  phone              String?
+  status             UserStatus?      @default(ACTIVE)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  sessions           Session[]
+  accounts           Account[]
+  carts              Cart[]
 
   @@map("user")
 }
@@ -64,6 +65,7 @@ model ProviderProfile {
   description   String?
   address       String
   contactNumber String
+  adminVerified Boolean  @default(false)
   userId        String   @unique
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   meals         Meal[]
@@ -108,19 +110,19 @@ model Meal {
 }
 
 model Order {
-  id            String      @id @default(uuid())
-  status        OrderStatus @default(PENDING)
-  totalPrice    Float
-  customerId    String
-  customer      User        @relation(fields: [customerId], references: [id])
-  
+  id         String      @id @default(uuid())
+  status     OrderStatus @default(PENDING)
+  totalPrice Float
+  customerId String
+  customer   User        @relation(fields: [customerId], references: [id])
+
   // ডেলিভারি ম্যানের সাথে রিলেশন
-  deliveryManId String?     // অর্ডারটি এখনো ডেলিভারি ম্যানের কাছে অ্যাসাইন নাও হতে পারে
-  deliveryMan   User?       @relation("DeliveryManOrders", fields: [deliveryManId], references: [id])
-  
-  items         OrderItem[]
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  deliveryManId String? // অর্ডারটি এখনো ডেলিভারি ম্যানের কাছে অ্যাসাইন নাও হতে পারে
+  deliveryMan   User?   @relation("DeliveryManOrders", fields: [deliveryManId], references: [id])
+
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 }
 
 model OrderItem {
@@ -217,13 +219,6 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
-
-
-
-
-
-
-
 
 // Old models for reference, not used in the current schema
 

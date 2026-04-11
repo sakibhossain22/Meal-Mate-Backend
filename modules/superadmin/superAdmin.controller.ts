@@ -4,7 +4,7 @@ import { superAdminServices } from "./superAdmin.services"
 const manageUser = async (req: Request, res: Response) => {
     try {
         const { userId, role, status } = req.body
-        const data = await superAdminServices.manageUser(userId, { role, status })
+        const data = await superAdminServices.manageUser(userId, role, status)
         res.status(200).json({
             success: true,
             ok: true,
@@ -26,7 +26,7 @@ const getSystemStats = async (req: Request, res: Response) => {
         const data = await superAdminServices.getSystemStats()
         res.status(200).json({ success: true, ok: true, data })
     } catch (error: any) {
-        const errorMessage = (error instanceof Error) ? error.message : "Failed to Update Delivery Status"
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to Fetch System Stats"
         res.status(500).json({ success: false, ok: false, error: errorMessage })
     }
 }
@@ -35,6 +35,35 @@ const verifyProvider = async (req: Request, res: Response) => {
     try {
         const { providerId, isVerified } = req.body
         const data = await superAdminServices.verifyProvider(providerId, isVerified)
+        res.status(200).json({ success: true, ok: true, data })
+    } catch (error: any) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to Update Delivery Status"
+        res.status(500).json({ success: false, ok: false, error: errorMessage })
+    }
+}
+const getAllDeliveryMenProfiles = async (req: Request, res: Response) => {
+    try {
+        const data = await superAdminServices.getAllDeliveryMenProfiles()
+        res.status(200).json({ success: true, ok: true, data })
+    } catch (error: any) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to GET Delivery Men Profiles"
+        res.status(500).json({ success: false, ok: false, error: errorMessage })
+    }
+}
+const getAllProvidersProfile = async (req: Request, res: Response) => {
+    try {
+        const data = await superAdminServices.getAllProvidersProfile()
+        res.status(200).json({ success: true, ok: true, data })
+    } catch (error: any) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to GET Providers Profiles"
+        res.status(500).json({ success: false, ok: false, error: errorMessage })
+    }
+}
+
+const verifyDeliveryMan = async (req: Request, res: Response) => {
+    try {
+        const { deliveryManId, isVerified } = req.body
+        const data = await superAdminServices.verifyDeliveryMan(deliveryManId, isVerified)
         res.status(200).json({ success: true, ok: true, data })
     } catch (error: any) {
         const errorMessage = (error instanceof Error) ? error.message : "Failed to Update Delivery Status"
@@ -68,5 +97,8 @@ export const superAdminController = {
     getSystemStats,
     verifyProvider,
     createCategory,
-    getAllOrders
+    getAllOrders,
+    verifyDeliveryMan,
+    getAllDeliveryMenProfiles,
+    getAllProvidersProfile
 }

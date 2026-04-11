@@ -66,7 +66,8 @@ const updateDeliveryStatusService = async (req: Request, res: Response) => {
 }
 const toggleAvailabilityService = async (req: Request, res: Response) => {
     try {
-        const data = await deliveryServices.toggleAvailabilityService(req.body.userId, req.body.isAvailable)
+        const userId = req?.user?.id as string
+        const data = await deliveryServices.toggleAvailabilityService(userId, req.body.isAvailable)
         res.status(200).json({
             success: true,
             ok: true,
@@ -87,7 +88,8 @@ const toggleAvailabilityService = async (req: Request, res: Response) => {
 }
 const getDeliveryStatsService = async (req: Request, res: Response) => {
     try {
-        const data = await deliveryServices.getDeliveryStatsService(req.body.deliveryManId)
+        const userId = req?.user?.id as string
+        const data = await deliveryServices.getDeliveryStatsService(userId)
         res.status(200).json({
             success: true,
             ok: true,
@@ -108,7 +110,8 @@ const getDeliveryStatsService = async (req: Request, res: Response) => {
 }
 const getDeliveryHistoryService = async (req: Request, res: Response) => {
     try {
-        const data = await deliveryServices.getDeliveryHistoryService(req.body.deliveryManId)
+        const userId = req?.user?.id as string
+        const data = await deliveryServices.getDeliveryHistoryService(userId)
         res.status(200).json({
             success: true,
             ok: true,

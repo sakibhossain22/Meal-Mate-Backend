@@ -60,14 +60,7 @@ const adminStats = async () => {
 };
 
 const getAllUsers = async () => {
-  const data = await prisma.user.findMany({
-    where: {
-      OR: [
-        { role: "CUSTOMER" },
-        { role: "PROVIDER" },
-      ],
-    },
-  });
+  const data = await prisma.user.findMany();
 
   return data;
 };
