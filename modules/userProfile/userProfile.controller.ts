@@ -23,6 +23,27 @@ const userProfile = async (req: Request, res: Response) => {
             );
     }
 }
+const allUserProfile = async (req: Request, res: Response) => {
+    try {
+        const data = await userProfileService.allUserProfile(req.user as UserType)
+        res.status(200).json({
+            success: true,
+            ok: true,
+            data,
+        })
+
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to Fetch User Profile"
+        res.status(500)
+            .json(
+                {
+                    success: false,
+                    data: null,
+                    error: errorMessage
+                }
+            );
+    }
+}
 const updateUserProfile = async (req: Request, res: Response) => {
     try {
         const data = await userProfileService.updateUserProfile(req.body, req.user as UserType)
@@ -46,5 +67,6 @@ const updateUserProfile = async (req: Request, res: Response) => {
 }
 export const userProfileController = {
     userProfile,
-    updateUserProfile
+    updateUserProfile,
+    allUserProfile
 }

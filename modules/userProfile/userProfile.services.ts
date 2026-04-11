@@ -3,9 +3,18 @@ import { UserType } from "../../src/types/types";
 
 
 const userProfile = async (user: UserType) => {
+    const data = await prisma.deliveryProfile.findUnique({
+        where: {
+            userId: user?.id
+        }
+    })
+
+    return data;
+};
+const allUserProfile = async (user: UserType) => {
     const data = await prisma.user.findUnique({
         where: {
-            id: user.id
+            id: user?.id
         }
     })
 
@@ -35,5 +44,6 @@ const updateUserProfile = async (bodyData: any, user: UserType) => {
 
 export const userProfileService = {
     userProfile,
-    updateUserProfile
+    updateUserProfile,
+    allUserProfile
 }

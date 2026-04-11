@@ -14,6 +14,7 @@ const createDelivery = async (bodyData: { userId: string, vehicleType: string })
     return data
 }
 export const acceptOrderService = async (orderId: string, deliveryManId: string) => {
+    console.log(orderId, deliveryManId)
     if (!orderId || !deliveryManId) {
         throw new AppError("Missing required fields: orderId and deliveryManId", 400)
     }
@@ -129,6 +130,25 @@ export const getDeliveryHistoryService = async (deliveryManId: string) => {
         orderBy: { updatedAt: "desc" },
     });
 };
+export const getMyOrdersService = async (deliveryManId: string) => {
+    if (!deliveryManId) {
+        throw new AppError("Missing required field: deliveryManId", 400)
+    }
+    return await prisma.order.findMany({
+        where: {
+            deliveryManId: deliveryManId,
+        },
+        include: {
+            customer: {
+                select: { name: true, phone: true, email: true, image: true },
+            },
+            items: {
+                include: { meal: { omit: { updatedAt: true, createdAt: true } } },
+            },
+        },
+        orderBy: { updatedAt: "desc" },
+    });
+};
 
 
 
@@ -138,5 +158,6 @@ export const deliveryServices = {
     updateDeliveryStatusService,
     toggleAvailabilityService,
     getDeliveryStatsService,
-    getDeliveryHistoryService
+    getDeliveryHistoryService,
+    getMyOrdersService
 }

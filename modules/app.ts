@@ -12,6 +12,7 @@ import { userProfileRouter } from './userProfile/userProfile.routes';
 import { cartRouter } from './cart/cart.routes';
 import { deliveryRouter } from './delivery/delivery.routes';
 import { superAdminRouter } from './superadmin/superAdmin.routes';
+import { aiRoutes } from './ai/ai.route';
 
 
 const app = express();
@@ -31,6 +32,7 @@ app.use("/delivery", deliveryRouter)
 app.use("/superadmin", superAdminRouter)
 app.use("/profile", userProfileRouter)
 app.use('/cart', cartRouter)
+app.use("/ai", aiRoutes)
 
 
 app.get('/', async (req: Request, res: Response) => {

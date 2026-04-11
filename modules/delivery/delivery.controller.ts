@@ -108,6 +108,28 @@ const getDeliveryStatsService = async (req: Request, res: Response) => {
             );
     }
 }
+const getMyOrdersService = async (req: Request, res: Response) => {
+    try {
+        const userId = req?.user?.id as string
+        const data = await deliveryServices.getMyOrdersService(userId)
+        res.status(200).json({
+            success: true,
+            ok: true,
+            data,
+        })
+
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : "Failed to Get My Orders"
+        res.status(500)
+            .json(
+                {
+                    success: false,
+                    data: null,
+                    error: errorMessage
+                }
+            );
+    }
+}
 const getDeliveryHistoryService = async (req: Request, res: Response) => {
     try {
         const userId = req?.user?.id as string
@@ -137,5 +159,6 @@ export const deliveryController = {
     updateDeliveryStatusService,
     toggleAvailabilityService,
     getDeliveryStatsService,
-    getDeliveryHistoryService
+    getDeliveryHistoryService,
+    getMyOrdersService
 }
