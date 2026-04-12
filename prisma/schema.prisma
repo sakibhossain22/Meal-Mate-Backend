@@ -118,7 +118,7 @@ model Order {
 
   // ডেলিভারি ম্যানের সাথে রিলেশন
   deliveryManId String? // অর্ডারটি এখনো ডেলিভারি ম্যানের কাছে অ্যাসাইন নাও হতে পারে
-  deliveryMan   User?   @relation("DeliveryManOrders", fields: [deliveryManId], references: [id])
+  deliveryMan   User?   @relation("DeliveryManOrders", fields: [deliveryManId], references: [id], onDelete: Cascade)
 
   items     OrderItem[]
   createdAt DateTime    @default(now())
@@ -128,9 +128,9 @@ model Order {
 model OrderItem {
   id       String  @id @default(uuid())
   orderId  String
-  order    Order   @relation(fields: [orderId], references: [id])
+  order    Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   mealId   String
-  meal     Meal    @relation(fields: [mealId], references: [id])
+  meal     Meal    @relation(fields: [mealId], references: [id], onDelete: Cascade)
   quantity Int
   price    Float
   address  String?
@@ -139,7 +139,7 @@ model OrderItem {
 model Cart {
   id        String     @id @default(uuid())
   userId    String
-  user      User       @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   items     CartItem[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt

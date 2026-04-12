@@ -1,9 +1,10 @@
 import { Router } from 'express'
-import { chatWithAI, chatWithAIOpenRouter } from './ai.controller'
+import { aiMealRecommend, chatWithAI, generateMealDescriptionAI } from './ai.controller'
 
 const router = Router()
 
 router.post('/chat', chatWithAI)
-// router.post('/chat-open', chatWithAIOpenRouter)
+router.post('/meal-description', generateMealDescriptionAI)
+router.post('/meal-recommend', aiMealRecommend)
 
 export const aiRoutes = router
